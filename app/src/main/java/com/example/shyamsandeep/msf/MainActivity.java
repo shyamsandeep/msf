@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -121,6 +122,20 @@ public class MainActivity extends AppCompatActivity {
         Amount.setText(null);
     }
 
+    private boolean validateFields() {
+        if(TextUtils.isEmpty(PhoneNo.getText()) ||
+                TextUtils.isEmpty(CustomerName.getText()) ||
+                TextUtils.isEmpty(AgentName.getText()) ||
+                TextUtils.isEmpty(HPNo.getText()) ||
+                TextUtils.isEmpty(Amount.getText())
+                ) {
+            Toast.makeText(this, "Please enter valid data!", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
+                if(!validateFields()) {
+                    return;
+                }
+                
                 String no=PhoneNo.getText().toString();
                 String msg = "Your Payment of Rs. ";
                 msg= msg + Amount.getText().toString()+ " for HP# " + HPNo.getText().toString() +
