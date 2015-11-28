@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT_BROADCAST), 0);
         PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED_BROADCAST), 0);
-
         sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     private class SentBroadcastReceiver extends BroadcastReceiver {
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 case Activity.RESULT_OK:
                     Toast.makeText(getBaseContext(), "SMS delivered",
                             Toast.LENGTH_SHORT).show();
+
                     break;
                 case Activity.RESULT_CANCELED:
                     Toast.makeText(getBaseContext(), "SMS not delivered",
@@ -124,10 +125,16 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validateFields() {
         if(TextUtils.isEmpty(PhoneNo.getText()) ||
+                TextUtils.getTrimmedLength(PhoneNo.getText()) < 10 ||
                 TextUtils.isEmpty(CustomerName.getText()) ||
+                TextUtils.getTrimmedLength(CustomerName.getText()) < 3 ||
                 TextUtils.isEmpty(AgentName.getText()) ||
+                TextUtils.getTrimmedLength(AgentName.getText()) < 3 ||
+                TextUtils.getTrimmedLength(HPNo.getText()) < 3 ||
                 TextUtils.isEmpty(HPNo.getText()) ||
-                TextUtils.isEmpty(Amount.getText())
+                TextUtils.isEmpty(Amount.getText())||
+                TextUtils.getTrimmedLength(Amount.getText()) < 3
+
                 ) {
             Toast.makeText(this, "Please enter valid data!", Toast.LENGTH_LONG).show();
             return false;
@@ -157,9 +164,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 
                 String no=PhoneNo.getText().toString();
-                String msg = "Your Payment of Rs. ";
+                String msg = "Dear " + CustomerName.getText().toString() + " Your Payment of Rs. ";
                 msg= msg + Amount.getText().toString()+ " for HP# " + HPNo.getText().toString() +
-                        " is recieved by " + AgentName.getText().toString();
+                        " is recieved by our Agent " + AgentName.getText().toString();
 
                 sendSMS(no, msg);
                 sendSMS(DEFAULT_DESTINATION, msg);
