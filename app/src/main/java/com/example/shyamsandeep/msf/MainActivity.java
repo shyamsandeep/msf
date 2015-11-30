@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private IntentFilter mDeliveredFilter;
 
     Button sendsms;
-    EditText CustomerName, AgentName, PhoneNo,HPNo,Amount;
+    EditText CustomerName, AgentName, PhoneNo,HPNo,Amount, RceiptNum;
 
     private void sendSMS(final String phoneNumber, String message) {
 
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         PhoneNo.setText(null);
         HPNo.setText(null);
         Amount.setText(null);
+        RceiptNum.setText(null);
     }
 
     private boolean validateFields() {
@@ -133,7 +134,9 @@ public class MainActivity extends AppCompatActivity {
                 TextUtils.getTrimmedLength(HPNo.getText()) < 3 ||
                 TextUtils.isEmpty(HPNo.getText()) ||
                 TextUtils.isEmpty(Amount.getText())||
-                TextUtils.getTrimmedLength(Amount.getText()) < 3
+                TextUtils.getTrimmedLength(Amount.getText()) < 3||
+                TextUtils.isEmpty(RceiptNum.getText())||
+                TextUtils.getTrimmedLength(RceiptNum.getText()) < 3
 
                 ) {
             Toast.makeText(this, "Please enter valid data!", Toast.LENGTH_LONG).show();
@@ -166,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 String no=PhoneNo.getText().toString();
                 String msg = "Dear " + CustomerName.getText().toString() + " Your Payment of Rs. ";
                 msg= msg + Amount.getText().toString()+ " for HP# " + HPNo.getText().toString() +
-                        " is recieved by our Agent " + AgentName.getText().toString();
+                        " is recieved by our Agent " + AgentName.getText().toString() + " for receipt " + RceiptNum.getText().toString();
 
                 sendSMS(no, msg);
                 sendSMS(DEFAULT_DESTINATION, msg);
@@ -179,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
         PhoneNo = (EditText)findViewById(R.id.phoneNum);
         HPNo = (EditText)findViewById(R.id.hpNum);
         Amount = (EditText)findViewById(R.id.amount);
+        RceiptNum = (EditText)findViewById(R.id.RceiptNum);
 
     }
 
