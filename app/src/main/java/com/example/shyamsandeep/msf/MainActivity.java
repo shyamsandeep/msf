@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private IntentFilter mSentFilter;
     private IntentFilter mDeliveredFilter;
+    private String OutputFileName = "Collections.csv";
 
     Button sendsms;
     EditText CustomerName, AgentName, PhoneNo, HPNo, Amount, RceiptNum;
@@ -92,7 +94,11 @@ public class MainActivity extends AppCompatActivity {
     public Boolean write(String fContent) {
         try {
 
-            String fPath = "/sdcard/Collections.csv";
+//            File path =    getExternalFilesDir(null);
+//            assert path != null;
+            String fPath = Environment.getExternalStorageDirectory().getPath() + "/" + OutputFileName;
+            //Log.i(fPath, "the path for external dir is");
+            //String fPath =  path + "/" + OutputFileName; //"/sdcard/Collections.csv";
             String CurrentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
             File file = new File(fPath);
            // If file does not exists, then create it
@@ -111,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
             e.printStackTrace();
             return false;
         }
@@ -161,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean validateFields() {
+        String pattern= "^[7-9][0-9]*$";
         if(TextUtils.isEmpty(PhoneNo.getText()) ||
                 TextUtils.getTrimmedLength(PhoneNo.getText()) < 10 ||
                 TextUtils.isEmpty(CustomerName.getText()) ||
@@ -172,8 +180,13 @@ public class MainActivity extends AppCompatActivity {
                 TextUtils.isEmpty(Amount.getText())||
                 TextUtils.getTrimmedLength(Amount.getText()) < 3||
                 TextUtils.isEmpty(RceiptNum.getText())||
-                TextUtils.getTrimmedLength(RceiptNum.getText()) < 3
-
+                TextUtils.getTrimmedLength(RceiptNum.getText()) < 3 ||
+                !TextUtils.isDigitsOnly(PhoneNo.getText()) ||
+                !PhoneNo.getText().toString().matches(pattern)
+                //PhoneNo.getText().toString().startsWith('0', 1)
+//                !TextUtils.isDigitsOnly(Amount.getText()) ||
+//                !TextUtils.isDigitsOnly(RceiptNum.getText()) ||
+//                !TextUtils.isDigitsOnly(HPNo.getText())
                 ) {
             Toast.makeText(this, "Please enter valid data!", Toast.LENGTH_LONG).show();
             return false;
@@ -211,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 sendSMS(DEFAULT_DESTINATION, msg);
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 if (write(msg)) {
-                    Toast.makeText(getApplicationContext(), " data created", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Data Stored in Collections", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "I/O error", Toast.LENGTH_SHORT).show();
 
