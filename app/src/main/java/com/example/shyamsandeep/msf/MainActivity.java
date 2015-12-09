@@ -22,7 +22,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private IntentFilter mDeliveredFilter;
 
     Button sendsms;
-    EditText CustomerName, AgentName, PhoneNo,HPNo,Amount, RceiptNum;
+    EditText CustomerName, AgentName, PhoneNo, HPNo, Amount, RceiptNum;
 
     private void sendSMS(final String phoneNumber, String message) {
 
@@ -47,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT_BROADCAST), 0);
         PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED_BROADCAST), 0);
         sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
     }
 
     private class SentBroadcastReceiver extends BroadcastReceiver {
@@ -77,6 +86,33 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     break;
             }
+        }
+    }
+
+    public Boolean write(String fContent) {
+        try {
+
+            String fPath = "/sdcard/Collections.csv";
+            String CurrentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+            File file = new File(fPath);
+           // If file does not exists, then create it
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            fContent = CurrentDateTimeString + "," + fContent;
+            FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.newLine();
+            bw.append(fContent);
+            bw.close();
+            fw.close();
+
+            Log.d("Suceess","Sucess");
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -173,6 +209,13 @@ public class MainActivity extends AppCompatActivity {
 
                 sendSMS(no, msg);
                 sendSMS(DEFAULT_DESTINATION, msg);
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                if (write(msg)) {
+                    Toast.makeText(getApplicationContext(), " data created", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "I/O error", Toast.LENGTH_SHORT).show();
+
+                }
 
             }
         });
