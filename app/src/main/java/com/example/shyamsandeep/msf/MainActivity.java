@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validateFields() {
         String pattern= "^[7-9][0-9]*$";
+        String pattern1 = "^[0-9][0-9][0-9]+[/\\\\][0-9]+$";
         if(TextUtils.isEmpty(PhoneNo.getText()) ||
                 TextUtils.getTrimmedLength(PhoneNo.getText()) < 10 ||
                 TextUtils.isEmpty(CustomerName.getText()) ||
@@ -181,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 TextUtils.getTrimmedLength(Amount.getText()) < 3||
                 TextUtils.isEmpty(RceiptNum.getText())||
                 TextUtils.getTrimmedLength(RceiptNum.getText()) < 3 ||
+                !RceiptNum.getText().toString().matches(pattern1) ||
                 !TextUtils.isDigitsOnly(PhoneNo.getText()) ||
                 !PhoneNo.getText().toString().matches(pattern)
                 //PhoneNo.getText().toString().startsWith('0', 1)

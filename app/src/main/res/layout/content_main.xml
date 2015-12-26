@@ -131,9 +131,9 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:hint="Receipt Number"
-            android:maxLength="5"
+            android:inputType="text"
+            android:hint="Book-Num/Receipt-Num"
+            android:maxLength="9"
             android:layout_marginTop="10dp"
             android:ems="10"
             android:id="@+id/RceiptNum"
