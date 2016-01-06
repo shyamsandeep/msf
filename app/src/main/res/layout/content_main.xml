@@ -120,7 +120,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
+        android:inputType="number"
         android:hint="Amount"
         android:maxLength="5"
         android:layout_marginTop="10dp"

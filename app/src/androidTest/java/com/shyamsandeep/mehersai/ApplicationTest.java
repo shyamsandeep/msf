@@ -1,4 +1,4 @@
-package com.example.shyamsandeep.msf;
+package com.shyamsandeep.mehersai;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

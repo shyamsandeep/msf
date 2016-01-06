@@ -1,5 +1,4 @@
-package com.example.shyamsandeep.msf;
-
+package com.shyamsandeep.mehersai;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,7 +34,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String DEFAULT_DESTINATION = "9959333664";
+    private static final String DEFAULT_DESTINATION = "9885399988";
 
     private String SENT_BROADCAST = "SMS_SENT";
     private String DELIVERED_BROADCAST = "SMS_DELIVERED";
@@ -103,7 +102,23 @@ public class MainActivity extends AppCompatActivity {
             File file = new File(fPath);
            // If file does not exists, then create it
             if (!file.exists()) {
-                file.createNewFile();
+                try {
+                    file.createNewFile();
+                    String Precontent = "Date , Time, Amt, HP-No,Agent, Reciept No";
+                    FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.newLine();
+                    bw.append(Precontent);
+                    bw.close();
+                    fw.close();
+
+                    Log.d("Suceess", "Sucess");
+                    return true;
+                } catch (IOException e) {
+                    Log.e("Exception", "File write failed: " + e.toString());
+                    e.printStackTrace();
+                    return false;
+                }
             }
             fContent = CurrentDateTimeString + "," + fContent;
             FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -169,7 +184,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validateFields() {
         String pattern= "^[7-9][0-9]*$";
-        String pattern1 = "^[0-9][0-9][0-9]+[/\\\\][0-9]+$";
+        String pattern1 = "^[1-9][0-9][0-9]+[/\\\\][1-9][0-9]*$";
+        String pattern2 = "^[1-9][0-9]*$";
         if(TextUtils.isEmpty(PhoneNo.getText()) ||
                 TextUtils.getTrimmedLength(PhoneNo.getText()) < 10 ||
                 TextUtils.isEmpty(CustomerName.getText()) ||
@@ -184,7 +200,10 @@ public class MainActivity extends AppCompatActivity {
                 TextUtils.getTrimmedLength(RceiptNum.getText()) < 3 ||
                 !RceiptNum.getText().toString().matches(pattern1) ||
                 !TextUtils.isDigitsOnly(PhoneNo.getText()) ||
-                !PhoneNo.getText().toString().matches(pattern)
+                !PhoneNo.getText().toString().matches(pattern) ||
+                !HPNo.getText().toString().matches(pattern2) ||
+                !Amount.getText().toString().matches(pattern2)
+
                 //PhoneNo.getText().toString().startsWith('0', 1)
 //                !TextUtils.isDigitsOnly(Amount.getText()) ||
 //                !TextUtils.isDigitsOnly(RceiptNum.getText()) ||
@@ -219,8 +238,8 @@ public class MainActivity extends AppCompatActivity {
                 
                 String no=PhoneNo.getText().toString();
                 String msg = "Dear " + CustomerName.getText().toString() + " Your Payment of Rs. ";
-                msg= msg + Amount.getText().toString()+ " for HP# " + HPNo.getText().toString() +
-                        " is recieved by our Agent " + AgentName.getText().toString() + " for receipt " + RceiptNum.getText().toString();
+                msg= msg + Amount.getText().toString()+ " , for HP# " + HPNo.getText().toString() +
+                        " ,is recieved by our Agent " + AgentName.getText().toString() + ", for receipt " + RceiptNum.getText().toString();
 
                 sendSMS(no, msg);
                 sendSMS(DEFAULT_DESTINATION, msg);
