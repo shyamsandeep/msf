@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private IntentFilter mDeliveredFilter;
     private String OutputFileName = "Collections.csv";
     private String CurrentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+    private static final String FIREBASE_URL = "https://sweltering-heat-3697.firebaseio.com/";
+
 
 
     Button sendsms;
@@ -93,14 +95,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public Boolean writefire(String fContent){
+    public Boolean WriteFire(String fContent){
 
-        Firebase myFirebaseRef = new Firebase("https://sweltering-heat-3697.firebaseio.com/");
-        myFirebaseRef.child(CurrentDateTimeString).setValue(fContent);
+        Firebase myFireBaseRef = new Firebase(FIREBASE_URL).child("msf");
+        //myFireBaseRef.child("posts");
+
+        //Map<String, String> post1 = new HashMap<String, String>();
+        //post1.put("author", "gracehop");
+        //post1.put("title", "Announcing COBOL, a New Programming Language");
+        //myFireBaseRef.push().setValue(post1);
+        fContent = CurrentDateTimeString + "," + fContent;
+        myFireBaseRef.push().setValue(fContent);
+        //child(CurrentDateTimeString).setValue(fContent);
         return true;
     }
 
-    public Boolean write(String fContent) {
+    public Boolean WriteFile(String fContent) {
         try {
 
 //            File path =    getExternalFilesDir(null);
@@ -254,13 +264,13 @@ public class MainActivity extends AppCompatActivity {
                 sendSMS(DEFAULT_DESTINATION, msg);
                 sendSMS(no, msg);
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                if (write(msg)) {
+                if (WriteFile(msg)) {
                     Toast.makeText(getApplicationContext(), "Data Stored in Collections", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "I/O error", Toast.LENGTH_SHORT).show();
 
                 }
-                if (writefire(msg)) {
+                if (WriteFire(msg)) {
                     Toast.makeText(getApplicationContext(), "Data Stored in fireDB", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "I/O error while writing to fireDB", Toast.LENGTH_SHORT).show();
