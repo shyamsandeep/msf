@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.firebase.client.Firebase;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private IntentFilter mSentFilter;
     private IntentFilter mDeliveredFilter;
     private String OutputFileName = "Collections.csv";
+    private String CurrentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+
 
     Button sendsms;
     EditText CustomerName, AgentName, PhoneNo, HPNo, Amount, RceiptNum;
@@ -90,6 +93,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public Boolean writefire(String fContent){
+
+        Firebase myFirebaseRef = new Firebase("https://sweltering-heat-3697.firebaseio.com/");
+        myFirebaseRef.child(CurrentDateTimeString).setValue(fContent);
+        return true;
+    }
+
     public Boolean write(String fContent) {
         try {
 
@@ -98,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
             String fPath = Environment.getExternalStorageDirectory().getPath() + "/" + OutputFileName;
             //Log.i(fPath, "the path for external dir is");
             //String fPath =  path + "/" + OutputFileName; //"/sdcard/Collections.csv";
-            String CurrentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
             File file = new File(fPath);
            // If file does not exists, then create it
             if (!file.exists()) {
@@ -112,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     bw.close();
                     fw.close();
 
-                    Log.d("Suceess", "Sucess");
+                    Log.d("Success", "Success");
                     return true;
                 } catch (IOException e) {
                     Log.e("Exception", "File write failed: " + e.toString());
@@ -128,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             bw.close();
             fw.close();
 
-            Log.d("Suceess","Sucess");
+            Log.d("Success","Success");
             return true;
 
         } catch (IOException e) {
@@ -219,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Firebase.setAndroidContext(this);
         setContentView(R.layout.content_main);
 
         mSentReceiver = new SentBroadcastReceiver();
@@ -241,13 +251,19 @@ public class MainActivity extends AppCompatActivity {
                 msg= msg + Amount.getText().toString()+ " , for HP# " + HPNo.getText().toString() +
                         " ,is recieved by our Agent " + AgentName.getText().toString() + ", for receipt " + RceiptNum.getText().toString();
 
-                sendSMS(no, msg);
                 sendSMS(DEFAULT_DESTINATION, msg);
+                sendSMS(no, msg);
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 if (write(msg)) {
                     Toast.makeText(getApplicationContext(), "Data Stored in Collections", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "I/O error", Toast.LENGTH_SHORT).show();
+
+                }
+                if (writefire(msg)) {
+                    Toast.makeText(getApplicationContext(), "Data Stored in fireDB", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "I/O error while writing to fireDB", Toast.LENGTH_SHORT).show();
 
                 }
 
