@@ -33,6 +33,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String DEFAULT_DESTINATION = "9885399988";
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private IntentFilter mDeliveredFilter;
     private String OutputFileName = "Collections.csv";
     private String CurrentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-    private static final String FIREBASE_URL = "https://sweltering-heat-3697.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://mehersai.firebaseio.com/";
 
 
 
@@ -97,15 +98,16 @@ public class MainActivity extends AppCompatActivity {
 
     public Boolean WriteFire(String fContent){
 
-        Firebase myFireBaseRef = new Firebase(FIREBASE_URL).child("msf");
-        //myFireBaseRef.child("posts");
+        Firebase myFireBaseRef = new Firebase(FIREBASE_URL);
+        Firebase Postref = myFireBaseRef.child("Collections").push();
+        Postref.child("Date").setValue(CurrentDateTimeString);
+        Postref.child("Message").setValue(fContent);
+        Postref.push();
+       // myFireBaseRef.push().child("name").setValue(CurrentDateTimeString);
+        // myFireBaseRef.push().child("text").setValue(fContent);
+        //.child().setValue("name":CurrentDateTimeString, "text":fContent);
 
-        //Map<String, String> post1 = new HashMap<String, String>();
-        //post1.put("author", "gracehop");
-        //post1.put("title", "Announcing COBOL, a New Programming Language");
-        //myFireBaseRef.push().setValue(post1);
-        fContent = CurrentDateTimeString + "," + fContent;
-        myFireBaseRef.push().setValue(fContent);
+
         //child(CurrentDateTimeString).setValue(fContent);
         return true;
     }
