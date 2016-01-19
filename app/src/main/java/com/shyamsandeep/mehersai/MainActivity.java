@@ -96,12 +96,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public Boolean WriteFire(String fContent){
+    public Boolean WriteFire(String Agent,String Customer, String HP, String Receipt, String Amt){
 
         Firebase myFireBaseRef = new Firebase(FIREBASE_URL);
         Firebase Postref = myFireBaseRef.child("Collections").push();
         Postref.child("Date").setValue(CurrentDateTimeString);
-        Postref.child("Message").setValue(fContent);
+        Postref.child("Agent").setValue(Agent);
+        Postref.child("Customer").setValue(Customer);
+        Postref.child("HP").setValue(HP);
+        Postref.child("Receipt").setValue(Receipt);
+        Postref.child("Amount").setValue(Amt);
         Postref.push();
        // myFireBaseRef.push().child("name").setValue(CurrentDateTimeString);
         // myFireBaseRef.push().child("text").setValue(fContent);
@@ -125,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             if (!file.exists()) {
                 try {
                     file.createNewFile();
-                    String Precontent = "Date , Time, Amt, HP-No,Agent, Reciept No";
+                    String Precontent = "Date , Time, Amt, HP-No,Agent, Reciept-No";
                     FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
                     BufferedWriter bw = new BufferedWriter(fw);
                     bw.newLine();
@@ -272,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "I/O error", Toast.LENGTH_SHORT).show();
 
                 }
-                if (WriteFire(msg)) {
+                if (WriteFire(AgentName.getText().toString(),CustomerName.getText().toString(),HPNo.getText().toString(),RceiptNum.getText().toString(),Amount.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Data Stored in fireDB", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "I/O error while writing to fireDB", Toast.LENGTH_SHORT).show();

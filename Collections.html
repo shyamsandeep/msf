@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table#t01 {
+    width: 100%;    
+    background-color: #f1f1c1;
+}
+</style>
+</head>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <link rel='stylesheet' type='text/css' href='/resources/tutorial/css/example.css'>
+    <h1 align="center">Welcome to MSF Collection Reports</h1>
+  </head>
+  <body>
+  <table id="t01">
+  <tr>
+    <th>Date</th>
+    <th>Agent Name</th>		
+    <th>Customer Name</th>
+    <th>Amount</th>
+    <th>HP-Num</th>
+    <th>Receipt Num</th>
+  </tr>
+   </table> 
+   
+    <div id='messagesDiv'></div>
+    <script>
+      var myDataRef = new Firebase('https://mehersai.firebaseio.com/Collections/');
+      myDataRef.on('child_added', function(snapshot) {
+        var message = snapshot.val();
+        showCollectionsData(message.Date, message.Agent, message.Customer, message.Amount, message.HP, message.Receipt);
+      });
+      function showCollectionsData(Date, Agent, Customer, Amount, HP, Receipt) {
+ 
+		var str = "<tr>" + 
+		"<td>" + Date + "</td>" + 
+		"<td>" + Agent + "</td>" +	
+		"<td>" + Customer + "</td>" +   
+		"<td>" + Amount + "</td>" +
+		"<td>" + HP + "</td>" +    
+		"<td>" + Receipt + "</td>" +
+		"</tr>";
+		
+		$('#t01').append(str);
+        $('#t01')[0].scrollTop = $('#t01')[0].scrollHeight;
+      };
+    </script>   
+  </body>
+</html>
